@@ -1,0 +1,15 @@
+<div class="display">
+  <div
+    class="ball"
+    [ngStyle]="{
+      'left': ballCoords.x + 'px',
+      'top': ballCoords.y + 'px'
+    }"
+  ></div>
+</div>
+<div
+  class="drag-area"
+  (mousedown)="handleMouseDown($event)"
+  (mouseup)="handleMouseUp()"
+  (mousemove)="handleMouseMove($event)"
+></div>
