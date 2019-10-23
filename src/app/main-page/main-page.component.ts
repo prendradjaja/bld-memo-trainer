@@ -20,8 +20,27 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit() {}
 
+  handleTouchStart(event: TouchEvent) {
+    this.dragStartCoords = this.getCoordsFromTouchEvent(event);
+    this.ballDragStartCoords = { ...this.ballCoords };
+  }
+
+  handleTouchEnd() {
+    this.dragStartCoords = null;
+  }
+
+  handleTouchMove(event: TouchEvent) {
+    if (this.isDragging()) {
+      const offset = subtract(
+        this.getCoordsFromTouchEvent(event),
+        this.dragStartCoords
+      );
+      this.ballCoords = add(this.ballDragStartCoords, offset);
+    }
+  }
+
   handleMouseDown(event: MouseEvent) {
-    this.dragStartCoords = this.getCoords(event);
+    this.dragStartCoords = this.getCoordsFromMouseEvent(event);
     this.ballDragStartCoords = { ...this.ballCoords };
   }
 
@@ -31,12 +50,22 @@ export class MainPageComponent implements OnInit {
 
   handleMouseMove(event: MouseEvent) {
     if (this.isDragging()) {
-      const offset = subtract(this.getCoords(event), this.dragStartCoords);
+      const offset = subtract(
+        this.getCoordsFromMouseEvent(event),
+        this.dragStartCoords
+      );
       this.ballCoords = add(this.ballDragStartCoords, offset);
     }
   }
 
-  private getCoords(event: MouseEvent): Coords {
+  private getCoordsFromTouchEvent(event: TouchEvent): Coords {
+    return {
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY,
+    };
+  }
+
+  private getCoordsFromMouseEvent(event: MouseEvent): Coords {
     return {
       x: event.clientX,
       y: event.clientY,
